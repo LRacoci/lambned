@@ -1,5 +1,7 @@
 import purplex as lp
 
+from itertools import *
+
 
 class Lexer(lp.Lexer):
 
@@ -80,11 +82,16 @@ class Parser(lp.Parser):
 
 if __name__ == '__main__':
     parser = Parser()
-    problems = [
-        ('main := + 2 - * 3 4 4', 10),
-        ('main := *(-2)-(+ 1 1)', 4),
-        ('main := - * / 6 2 4 * 8 1', 4),
-    ]
-    for problem, answer in problems:
-        result = parser.parse(problem)
-        print result == answer
+    from glob import glob
+    from itertools import izip
+    for problem in glob('tests/arq*.hs'):
+        answer = problem[:-2] + 'res'
+        with open(problem) as p:
+            problem = p.read()
+        with open(answer) as a:
+            answer = a.read()
+        result = str(parser.parse(problem))
+        if result != answer:
+            print result, " != ", answer
+        else:
+            print "ok"
