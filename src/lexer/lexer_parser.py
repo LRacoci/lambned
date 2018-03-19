@@ -8,6 +8,12 @@ class Lexer(lp.Lexer):
     MAIN = lp.TokenDef(r'main')
     DEFINITION = lp.TokenDef(r':=')
 
+    SINGLE_SPACE = lp.TokenDef(r' ')
+
+    LAMBDA = lp.TokenDef(r'\\')
+    NAME = lp.TokenDef(r'[a-zA-Z_]')
+
+
     LPAREN = lp.TokenDef(r'\(')
     RPAREN = lp.TokenDef(r'\)')
     
@@ -41,6 +47,8 @@ class Parser(lp.Parser):
     LEXER = Lexer
     START = 'start'
     EXPRESSION = 'expression'
+
+    LAMBDA_EXP = 'lambda_exp'
 
     PRECEDENCE = (
         (lp.LEFT, 'UMINUS'),
