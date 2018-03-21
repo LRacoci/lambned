@@ -2,19 +2,17 @@ from parser import *
 
 def printTree(tree):
     def printTreeAux(n, tree):
-        if type(tree) is not tuple:
-            return '  '*n + str(tree)
-
-        resp = ''
-        for sub in tree:
-            resp += '  '*n  + printTreeAux(n+1,sub) + '\n'
-
+        resp = ""
+        if type(tree) is list:
+            for sub in tree:
+                resp += printTreeAux(n+1,sub)
+        elif n >= 0:
+            resp = "  "*n + str(tree) + "\n"
         return resp
-
-    return printTreeAux(0, tree)
+    return printTreeAux(-1, tree)
   
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = Parser()
     from glob import glob
     
@@ -28,10 +26,10 @@ if __name__ == '__main__':
         with open(answer) as a:
             answer = a.read()
         
-        print problem
+        #print problem
         #print answer
-        result = str(parser.parse(problem))
-
+        result = parser.parse(problem)
+        print "Result == ", result
         result = printTree(result)
         if result != answer:
             print result

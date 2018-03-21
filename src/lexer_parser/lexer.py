@@ -29,4 +29,5 @@ class Lexer(lp.Lexer):
     NOT = lp.TokenDef(r'not')
     OR  = lp.TokenDef(r'or')
 
-    WHITESPACE = lp.TokenDef(r'[\n\s]+', ignore=True)
+    WHITESPACE = lp.TokenDef(r'[ \t\n]+', ignore=True)
+    #_NEW_LINE_ = lp.TokenDef(r'\n', ignore=True)
