@@ -1,14 +1,11 @@
 import purplex as lp
 
-from itertools import *
-
-
 class Lexer(lp.Lexer):
 
     MAIN = lp.TokenDef(r'main')
-    DEFINITION = lp.TokenDef(r':=')
+    DEFINITION = lp.TokenDef(r'=')
 
-    SINGLE_SPACE = lp.TokenDef(r' ')
+    #SINGLE_SPACE = lp.TokenDef(r' ')
 
     LAMBDA = lp.TokenDef(r'\\')
     NAME = lp.TokenDef(r'[a-zA-Z_]')
@@ -32,4 +29,4 @@ class Lexer(lp.Lexer):
     NOT = lp.TokenDef(r'not')
     OR  = lp.TokenDef(r'or')
 
-    WHITESPACE = lp.TokenDef(r'[\s]+', ignore=True)
+    WHITESPACE = lp.TokenDef(r'[\n\s]+', ignore=True)
