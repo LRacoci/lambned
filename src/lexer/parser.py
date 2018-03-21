@@ -1,4 +1,5 @@
 from lexer import *
+    
 class Parser(lp.Parser):
 
     LEXER = Lexer
@@ -6,39 +7,39 @@ class Parser(lp.Parser):
     EXPRESSION = 'expression'
 
     PRECEDENCE = (
-        (lp.LEFT, 'UMINUS'),
+        (lp.RIGHT, 'UMINUS'),
         (lp.LEFT, 'TIMES', 'DIVIDE'),
-        (lp.LEFT, 'PLUS', 'MINUS'),
+        (lp.LEFT, 'PLUS', 'MINUS')
     )
     
     @lp.attach('start : MAIN DEFINITION expression')
-    def main(self,  main, definition, expr):
-        return 'main', (expr)
-
+    def main(self,  main, _, expr):
+        return ('main', expr)
+    
     @lp.attach('expression : INTEGER')
     def number(self, num):
         return int(num)
     
     @lp.attach('expression : LPAREN expression RPAREN')
-    def brackets(self, lparen, expr, rparen):
+    def brackets(self, a, expr, b):
         return '(', (expr), ')'
 
     @lp.attach('expression : expression PLUS expression')
-    def addition(self, left, op, right):
+    def addition(self, left, _, right):
         return '+', left, right
 
     @lp.attach('expression : expression MINUS expression')
-    def subtract(self, left, op, right):
+    def subtract(self, left, _, right):
         return '-', left, right
 
     @lp.attach('expression : expression TIMES expression')
-    def multiply(self, left, op, right):
+    def multiply(self, left, _, right):
         return '*', left, right
 
     @lp.attach('expression : expression DIVIDE expression')
-    def division(self, left, op, right):
+    def division(self, left, _, right):
         return '/', left, right
-	
+    
     @lp.attach('expression : MINUS expression', prec_symbol='UMINUS')
     def negate(self, minus, expr):
         return '-', expr

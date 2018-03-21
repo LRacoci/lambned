@@ -17,9 +17,8 @@ def printTree(tree):
 if __name__ == '__main__':
     parser = Parser()
     from glob import glob
-    from itertools import izip
     
-    for problem in glob('tests/arq1.hs'):
+    for problem in glob('tests/arq*.hs'):
         print problem
         answer = problem[:-2] + 'res'
         
@@ -29,7 +28,10 @@ if __name__ == '__main__':
         with open(answer) as a:
             answer = a.read()
         
+        print problem
+        #print answer
         result = str(parser.parse(problem))
+
         result = printTree(result)
         if result != answer:
             print result
