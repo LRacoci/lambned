@@ -1,45 +1,41 @@
 from lexer import *
-    
-class Parser(lp.Parser):
+import ply.yacc as yacc
 
-    LEXER = Lexer
-    START = 'start'
-    EXPRESSION = 'expression'
+# Regras do parser
 
-    PRECEDENCE = (
-        (lp.RIGHT, 'UMINUS'),
-        (lp.LEFT, 'TIMES', 'DIVIDE'),
-        (lp.LEFT, 'PLUS', 'MINUS')
-    )
-    
-    @lp.attach('start : MAIN DEFINITION expression')
-    def main(self,  main, _, expr):
-        return ('main', expr)
-    
-    @lp.attach('expression : INTEGER')
-    def number(self, num):
-        return int(num)
-    
-    @lp.attach('expression : LPAREN expression RPAREN')
-    def brackets(self, a, expr, b):
-        return '(', (expr), ')'
+precedence = (
+    ('left','PLUS','MINUS'),
+    ('left','TIMES','DIVIDE'),
+    ('right','UMINUS'),
+)
 
-    @lp.attach('expression : expression PLUS expression')
-    def addition(self, left, _, right):
-        return '+', left, right
+# Dicionario de nomes
+names = {}
 
-    @lp.attach('expression : expression MINUS expression')
-    def subtract(self, left, _, right):
-        return '-', left, right
+def p_statement_assign(t):
+    'statement : MAIN DEFINITION expression'
+    names[t[1]] = t[3]
 
-    @lp.attach('expression : expression TIMES expression')
-    def multiply(self, left, _, right):
-        return '*', left, right
+def p_expression_binop(t):
+    '''expression : expression PLUS expression
+                  | expression MINUS expression
+                  | expression TIMES expression
+                  | expression DIVIDE expression'''
+    t[0] = [t[2], t[1], t[3]]
 
-    @lp.attach('expression : expression DIVIDE expression')
-    def division(self, left, _, right):
-        return '/', left, right
-    
-    @lp.attach('expression : MINUS expression', prec_symbol='UMINUS')
-    def negate(self, minus, expr):
-        return '-', expr
+def p_expression_uminus(t):
+    'expression : MINUS expression %prec UMINUS'
+    t[0] = ['-', t[2]]
+
+def p_expression_group(t):
+    'expression : LPAREN expression RPAREN'
+    t[0] = t[2]
+
+def p_expression_number(t):
+    'expression : NATURAL'
+    t[0] = t[1]
+
+def p_error(t):
+    print("Syntax error at '%s'" % t.value)
+
+parser = yacc.yacc()
